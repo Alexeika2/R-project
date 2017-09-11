@@ -12,14 +12,11 @@
 # Причем сделать это для каждого вида(species) отдельно.
 
 #Считаем файл
-species.dt <- read.delim("Downloads/task1/spec_dt.txt",header = T)
+require(data.table)
+species.dt <- fread("Downloads/task1/spec_dt.txt",header = T)
+
+#Используем функцию rank чтобы проставить порядковый номер
+res <- species.dt[,rank := rank(value), by = species]
 
 #Отсортируем датафрэйм
-species.dt<-species.dt[ order(species.dt$species,species.dt$value),]
-
-#Используем функцию ave и rank
-species.dt$rank<-ave(species.dt$value,species.dt$species,FUN=rank)
-
-#проверка
-head(species.dt$rank[species.dt$species=="Neisseria subflava"])
-head(species.dt$rank[species.dt$species=="Streptococcus pneumoniae"])
+res <- res[ order(species, rank) ]
